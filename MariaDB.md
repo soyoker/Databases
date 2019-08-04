@@ -91,6 +91,9 @@ MariaDB [mysql]> select user from user;
 #1.创建一个没有密码的用户 ${Uer}
 MariaDB [none]> create user '${User}'@'{Host}';
 Query OK, 0 rows affected (0.00 sec)
+#为用户 ${Uer} 设置密码
+MariaDB [none]> set password for ${User}@${Host} = password('${Password}');
+Query OK, 0 rows affected (0.00 sec)
 
 #2.创建一个用户 ${User} 并设置它的密码为 ${Password}
 MariaDB [none]> create user '${User}'@'{Host}' identified by '${Password}';
@@ -115,4 +118,21 @@ Query OK, 0 rows affected (0.00 sec)
 #rename user 只能改变 ${User} 字段
 MariaDB [none]> rename user ${User}@${Host} to ${NewUser}@${Host};
 Query OK, 0 rows affected (0.00 sec)
+```
+忘记 root 密码的处理方法：
+
+  - 停止当前 SQL 进程
+
+  - 略过 SQL 的认证开启 SQL 进程
+```bash
+root@host:~# mysqld_safe --skip-grant-tables &
+```
+  - 登录数据库(此时不需要密码)
+```bash
+root@host:~# mysql -uroot
+```
+  - 修改数据库中 root 的密码字段
+```bash
+MariaDB [(none)]> UPDATE mysql.user SET password=PASSWORD("${NewPassword}") WHERE user='root';
+MariaDB [(none)]> FLUSH PRIVILEGES;
 ```
