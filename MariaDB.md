@@ -65,7 +65,7 @@ root@host:~# mysql -u ${User} -p{Password} -h ${DBHost} -P ${Port} -e '${SQL}' -
 #-V ：纵向显示
 #-C ：压缩数据传输
 ```
-## 用户管理
+### 用户管理
 ---
 数据库的用户信息存储在默认的 mysql 库
 
