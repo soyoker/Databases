@@ -65,3 +65,54 @@ root@host:~# mysql -u ${User} -p{Password} -h ${DBHost} -P ${Port} -e '${SQL}' -
 #-V ：纵向显示
 #-C ：压缩数据传输
 ```
+## 用户管理
+---
+数据库的用户信息存储在默认的 mysql 库
+
+查看所有的数据库用户：
+```bash
+#切换到 mysql 库
+MariaDB [(none)]> use mysql;
+Reading table information for completion of table and column names
+
+Database changed
+#查找 mysql 存储的所有用户名称
+MariaDB [mysql]> select user from user;
++--------+
+| user   |
++--------+
+| zabbix |
+| root   |
++--------+
+2 rows in set (0.01 sec)
+```
+创建用户：
+```bash
+#1.创建一个没有密码的用户 ${Uer}
+MariaDB [none]> create user '${User}'@'{Host}';
+Query OK, 0 rows affected (0.00 sec)
+
+#2.创建一个用户 ${User} 并设置它的密码为 ${Password}
+MariaDB [none]> create user '${User}'@'{Host}' identified by '${Password}';
+Query OK, 0 rows affected (0.00 sec)
+
+#3.直接授权用户时（如果没有指定用户）自动创建该用户
+MariaDB [none]> grant all on ${DBName}* to ${User}@${Host} identified by '${Password}';
+Query OK, 0 rows affected (0.00 sec)
+```
+删除用户：
+```bash
+#1.使用 delete 条件语句删除用户，只删除用户字段
+MariaDB [none]> delete from mysql.user where user='${User}' and host='${Host}';
+Query OK, 1 row affected (0.00 sec)
+
+#2.使用 drop 语句删除用户 删除关于 ${User} 的所有字段，包含权限
+MariaDB [none]> drop user ${User}@${Host};
+Query OK, 0 rows affected (0.00 sec)
+```
+重命名用户：
+```bash
+#rename user 只能改变 ${User} 字段
+MariaDB [none]> rename user ${User}@${Host} to ${NewUser}@${Host};
+Query OK, 0 rows affected (0.00 sec)
+```
