@@ -100,7 +100,7 @@ MariaDB [none]> create user '${User}'@'{Host}' identified by '${Password}';
 Query OK, 0 rows affected (0.00 sec)
 
 #3.直接授权用户时（如果没有指定用户）自动创建该用户
-MariaDB [none]> grant all on ${DBName}* to ${User}@${Host} identified by '${Password}';
+MariaDB [none]> grant all on ${DBName}.* to ${User}@${Host} identified by '${Password}';
 Query OK, 0 rows affected (0.00 sec)
 ```
 删除用户：
@@ -135,4 +135,11 @@ root@host:~# mysql -uroot
 ```bash
 MariaDB [(none)]> UPDATE mysql.user SET password=PASSWORD("${NewPassword}") WHERE user='root';
 MariaDB [(none)]> FLUSH PRIVILEGES;
+```
+### 授权管理
+---
+```bash
+#授权 ${User} 
+MariaDB [none]> grant ${Privileges} on ${DBName}.${Tables} to ${User}@${Host} identified by '${Password}';
+Query OK, 0 rows affected (0.00 sec)
 ```
